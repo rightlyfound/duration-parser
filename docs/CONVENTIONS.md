@@ -51,3 +51,47 @@ silent on the input class.
 - Spec gap -> PROPOSE a goal amendment, halt, await approval. No test.
 
 Borderline declarations are listed in the report. They are judgments, not facts.
+
+---
+
+# Revision R1 (goal amendments, human-approved)
+
+Revision counter: R1. Status of this record remains **INFERRED**.
+
+All five amendments below were PROPOSED by the agent after the initial corpus audit
+(5 spec-gap survivors) and APPROVED by the human in this conversation ("accept all
+five as defaults"). C-S for every amendment is that approval, not the agent.
+Each amendment is a claim with its own C-A / C-S / C-R, per 7.1.
+
+| ID | C-A (assertion) | C-R (revise if) |
+|----|-----------------|-----------------|
+| **G4** | Components must appear in h, m, s order; out-of-order input is malformed. | a user needs `30m1h` to parse |
+| **G5** | Suffixes are lowercase only; uppercase suffixes are malformed. | users report `1H` should parse |
+| **G6** | No whitespace anywhere; any whitespace is malformed. | users need `1h 30m` to parse |
+| **G7** | Each unit appears at most once; repeated units are malformed. | a use case needs `1h1h` summed |
+| **G8** | Components are digit-only non-negative integers; decimals are malformed. | fractional durations become a feature |
+
+All five are the conservative reading (reject more, accept less); relaxing any of them
+is an explicit addition, not a silent assumption.
+
+## Classification outcome under the R0 rule
+
+- Zero_Treatment: classified **test gap** (adversary declares `violates: G1`).
+  **Borderline:** the counter-reading is that the goal never says zero is valid, i.e.
+  silent. This is a judgment, accepted by the human, and recorded here as one.
+- The five spec gaps are closed by amendment G4-G8, not by tests written before it.
+
+## Still silent (deliberately NOT asserted by any test)
+
+Empty string, a bare number with no suffix (`"90"`), negative numbers, leading `+`,
+leading zeros, unit values over 59 (`"90m"`), very large values, non-str arguments.
+The goal and amendments make no choice here, so no test encodes one. The
+implementation's behavior on these inputs is undocumented, not specified.
+
+## C-CANARY revision (R1)
+
+Predicate (1) is restated to match how the runner can actually express it:
+the canary is the same command wrapped as `env DURATION_IMPL=<known-bad> <command>`;
+the test command, files and working directory are identical. Predicates (2) and (3)
+are unchanged. Reason: `check-audit verify` runs argv lists in a shared environment, so
+a per-run variable is passed through `env`.
