@@ -10,6 +10,9 @@ Goal (docs/CONVENTIONS.md, C-GOAL):
   G1 returns total seconds as int
   G2 recognizes h, m, s suffixes
   G3 raises ValueError on malformed input
+Amendments G4-G8 (R1, human-approved): h,m,s order; lowercase only; no whitespace;
+each unit at most once; digits-only integers. At R0 the five adversaries probing these
+classes declared violates=None (goal silent); after R1 they cite G4-G8.
 """
 
 from __future__ import annotations
@@ -106,13 +109,13 @@ def _raises_wrong_type(s: str) -> int:
 
 
 ADVERSARIES: tuple[Adversary, ...] = (
-    Adversary("any_order", "Order_Dependence", None, _any_order),
-    Adversary("case_insensitive", "Case_Blindness", None, _case_insensitive),
+    Adversary("any_order", "Order_Dependence", "G4", _any_order),
+    Adversary("case_insensitive", "Case_Blindness", "G5", _case_insensitive),
     Adversary("zero_is_malformed", "Zero_Treatment", "G1", _zero_is_malformed),
-    Adversary("tolerates_whitespace", "Whitespace_Tolerance", None,
+    Adversary("tolerates_whitespace", "Whitespace_Tolerance", "G6",
               _tolerates_whitespace),
-    Adversary("sums_repeats", "Repeat_Units", None, _sums_repeats),
-    Adversary("truncates_fractions", "Fractional_Truncation", None,
+    Adversary("sums_repeats", "Repeat_Units", "G7", _sums_repeats),
+    Adversary("truncates_fractions", "Fractional_Truncation", "G8",
               _truncates_fractions),
     Adversary("wrong_multiplier", "Wrong_Total", "G1", _wrong_multiplier),
     Adversary("returns_float", "Wrong_Type", "G1", _returns_float),
