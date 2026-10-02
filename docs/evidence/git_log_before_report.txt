@@ -1,0 +1,11 @@
+7b599fe impl: parse_duration (scanner) passing the closed suite
+fbbd098 test: tests for approved amendments G4-G8
+183d217 test: close test gap Zero_Treatment (G1, G2)
+b6cc638 corpus: adversaries now cite amended clauses G4-G8 (R1)
+389031b docs: convention record R1 - approved goal amendments G4-G8
+8c78367 tooling: suite-vs-corpus audit adapter (check_audit is not goal-parametric)
+cdd6773 test: initial suite from the goal alone (G1-G3)
+403d4e6 corpus: reference + 10 adversaries (6 input classes, 4 goal-violators)
+cb57e97 docs: convention record R0 with pre-registered classification rule
+91f2248 chore: scaffold (pytest config, gitignore)
+af8264f Initial commit

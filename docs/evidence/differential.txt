@@ -1,0 +1,3 @@
+alphabet='012hmsHM .' (10 chars), lengths 0-5
+strings compared=111111  disagreements=0  first=None
+unicode digit (outside suite & goal): ('ValueError', None) vs reference ('ok', 10800)

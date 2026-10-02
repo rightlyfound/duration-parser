@@ -1,0 +1,12 @@
+VERDICT: UNTRUSTED
+  - canary exited 0: this check cannot go red on known-bad input
+stamp duration_parser: /home/claude/duration-parser/src/duration_parser/__init__.py [ok]
+
+--- canary: env DURATION_IMPL=reference_literal python -m pytest -q -rf -p no:cacheprovider (exit 0); last output ---
+..............................                                           [100%]
+30 passed in 0.15s
+
+--- command: python -m pytest -q -rf -p no:cacheprovider (exit 0); last output ---
+..............................                                           [100%]
+30 passed in 0.15s
+EXIT=2
