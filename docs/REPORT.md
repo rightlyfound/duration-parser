@@ -9,7 +9,7 @@ unreviewed externally.
 
 - Test run: (passes=30, failures=0, unknowns=0)
 - Corpus: (caught=10, survived=0)  [initial: caught=4, survived=6]
-- Report: (VERIFIED=15, INFERRED=3, UNSUPPORTED=0)
+- Report: (VERIFIED=16, INFERRED=3, UNSUPPORTED=0)
 - Convention: (supplied=1 [C-GOAL], INFERRED=3 [C-GOAL-R1, C-CANARY, C-ADV], UNSUPPORTED=0); not STALE (revised to R1 this run)
 - Exit condition: **Conditional** (TRUSTED_PASS, zero survivors, zero UNSUPPORTED, convention root INFERRED). This is the highest status reachable from inside the loop.
 
@@ -21,6 +21,7 @@ unreviewed externally.
 - A reference implementation lives in the corpus so the audit can prove non-vacuity before step 7.
 - The suite author had seen the corpus. Authorship independence is NOT established.
 - Not pushed to GitHub (C15); delivered as a git bundle.
+- The first differential (C8) was narrow; C8b widens it. C11 (Unicode digits) was found by code reading, not by any differential.
 
 ## Claims
 
@@ -34,12 +35,13 @@ unreviewed externally.
 | C5 | After amendments G4-G8 and before any new test, the unchanged suite still left 6 survivors, now all labelled test gap (each cites a clause). | VERIFIED | docs/evidence/post_amendment_audit.txt: `any_order              Order_Dependence       G4           0 SURVIVED   test gap` | C-GOAL-R1, C-ADV |
 | C6 | After the closing tests, the corpus audit: 10 caught, 0 survived, 0 untrusted. Each adversary names its catching tests in the log. | VERIFIED | docs/evidence/final_audit.txt: `Corpus: (caught=10, survived=0, untrusted=0)` | C-GOAL-R1, C-ADV |
 | C7 | The real implementation passes the closed suite with DURATION_IMPL unset. | VERIFIED | docs/evidence/real_suite.txt: `30 passed in 0.14s` | C-GOAL, C-GOAL-R1 |
-| C8 | The real implementation agrees with the corpus reference on all 111,111 strings of length 0-5 over a 10-character ASCII alphabet. | VERIFIED | docs/evidence/differential.txt: `strings compared=111111  disagreements=0  first=None` | C-GOAL-R1, C-ADV |
+| C8 | First differential: the implementation and the corpus reference never disagreed on 111,111 strings (alphabet '012hmsHM .', lengths 0-5). NARROW: only the digits 0, 1, 2 appear and nothing longer than 5 characters, so inputs like 45m or 1h30m15s are not covered here; see C8b. | VERIFIED | docs/evidence/differential.txt: `strings compared=111111  disagreements=0  first=None` | C-GOAL-R1, C-ADV |
+| C8b | Wider differential: 0 disagreements on 300,000 seeded token strings (37,933 accepted by the implementation). The exhaustive part (all digits 0-9, lengths 0-4, 111,151 strings, 3,630 accepted) also found 0. | VERIFIED | docs/evidence/differential_extended.txt: `strings=300000 accepted_by_impl=37933 disagreements=0 first=[]` | C-GOAL-R1, C-ADV |
 | C9 | run_checked (check-audit verify) with a real canary returned TRUSTED_PASS, exit 0. | VERIFIED | docs/evidence/run_checked_A.txt: `VERDICT: TRUSTED_PASS` | C-CANARY |
 | C9b | (same run) exit code: | VERIFIED | docs/evidence/run_checked_A.txt: `EXIT=0` | C-CANARY |
 | C10 | With the canary swapped for one that passes, run_checked returned UNTRUSTED, exit 2. | VERIFIED | docs/evidence/run_checked_B.txt: `VERDICT: UNTRUSTED` | C-CANARY |
 | C10b | (same run) exit code: | VERIFIED | docs/evidence/run_checked_B.txt: `EXIT=2` | C-CANARY |
-| C11 | The reference and the implementation differ on a Unicode digit (reference accepts it, implementation rejects it). The goal is silent here, so neither is wrong; no test asserts either. | VERIFIED | docs/evidence/differential.txt: `unicode digit (outside suite & goal): ('ValueError', None) vs reference ('ok', 10800)` | C-ADV, C-GOAL-R1 |
+| C11 | The reference accepts Unicode decimal digits (Arabic-Indic, fullwidth) and the implementation rejects them; superscript and circled digits are rejected by both. FOUND BY READING THE CODE (reference uses \d, implementation checks ASCII digits) and confirmed by hand-picked probes. NO differential run covers it: every differential alphabet is ASCII. The goal is silent, so neither behavior is wrong and no test asserts either. | VERIFIED | docs/evidence/differential_extended.txt: `'٣'+'h': impl=('ValueError', None) reference=('ok', 10800)` | C-ADV, C-GOAL-R1 |
 | C12 | The suite tracks the goal. Supported only as: no corpus adversary survives. The corpus is the agent's own and unreviewed; the suite was written after the agent saw the corpus; classes outside the corpus are untested. | INFERRED | none (judgment; see C-GOAL / C-GOAL-R1) | C-ADV, C-GOAL-R1 |
 | C13 | No test asserts a spec choice the goal or amendments did not make (per-assertion mapping below). | INFERRED | none (judgment; see C-GOAL / C-GOAL-R1) | C-GOAL, C-GOAL-R1 |
 | C14 | check_audit.core.audit() is hardwired to the dedupe goal, so a suite-vs-corpus adapter was substituted. | VERIFIED | check-audit-harness src/check_audit/core.py:122: `if not satisfies_goal(original, output):` | C-ADV |
@@ -223,6 +225,20 @@ exit=0
 alphabet='012hmsHM .' (10 chars), lengths 0-5
 strings compared=111111  disagreements=0  first=None
 unicode digit (outside suite & goal): ('ValueError', None) vs reference ('ok', 10800)
+```
+
+### docs/evidence/differential_extended.txt
+
+```
+exhaustive: alphabet='0123456789hmsHM .\t' (18 chars), lengths 0-4
+  strings=111151 accepted_by_impl=3630 disagreements=0 first=[]
+sampled: 300000 seeded token strings (seed=0), up to ~12 chars
+  strings=300000 accepted_by_impl=37933 disagreements=0 first=[]
+unicode digit probes (outside the goal; NOT counted above):
+  '٣'+'h': impl=('ValueError', None) reference=('ok', 10800)
+  '３'+'h': impl=('ValueError', None) reference=('ok', 10800)
+  '²'+'h': impl=('ValueError', None) reference=('ValueError', None)
+  '①'+'h': impl=('ValueError', None) reference=('ValueError', None)
 ```
 
 ### docs/evidence/run_checked_A.txt
