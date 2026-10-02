@@ -18,6 +18,9 @@ import pytest
         ("45s", 45),  # G2 (s), G1
         ("1h30m", 5400),  # G2, G1: total seconds across suffixes
         ("1h30m15s", 5415),  # G2, G1
+        ("0s", 0),  # G2 + G1: number 0 with a recognized suffix; total is 0
+        ("0h", 0),  # G2 + G1
+        ("1h0m", 3600),  # G2 + G1: zero component contributes nothing
     ],
 )
 def test_total_seconds(parse_duration, text, seconds):
