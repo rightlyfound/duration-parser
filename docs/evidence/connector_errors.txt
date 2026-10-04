@@ -1,0 +1,10 @@
+Verbatim errors returned by the GitHub connector in this session (not reproducible from
+this repo; recorded because claim C15 depends on them):
+
+create_repository (first attempt, before the human created the repo):
+  failed to create repository: POST https://api.github.com/user/repos: 403 Resource not accessible by integration []
+push_files:
+  failed to create tree: POST https://api.github.com/repos/rightlyfound/duration-parser/git/trees: 403 Resource not accessible by integration []
+create_or_update_file (correct repo name):
+  failed to create/update file: PUT https://api.github.com/repos/rightlyfound/duration-parser/contents/pyproject.toml: 403 Resource not accessible by integration []
+(One earlier create_or_update_file call used a wrong repo name -> 404; that was an operator typo and is not evidence about permissions.)

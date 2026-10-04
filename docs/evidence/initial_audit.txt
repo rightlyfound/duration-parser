@@ -1,0 +1,24 @@
+reference_literal: exit 0, failed tests: []
+adversary              class                  violates  exit verdict    classification
+any_order              Order_Dependence       None         0 SURVIVED   spec gap
+case_insensitive       Case_Blindness         None         0 SURVIVED   spec gap
+zero_is_malformed      Zero_Treatment         G1           0 SURVIVED   test gap
+tolerates_whitespace   Whitespace_Tolerance   None         0 SURVIVED   spec gap
+sums_repeats           Repeat_Units           None         0 SURVIVED   spec gap
+truncates_fractions    Fractional_Truncation  None         0 SURVIVED   spec gap
+wrong_multiplier       Wrong_Total            G1           1 CAUGHT     
+    caught by: tests/test_parse_duration.py::test_total_seconds[45m-2700]
+    caught by: tests/test_parse_duration.py::test_total_seconds[1h30m-5400]
+    caught by: tests/test_parse_duration.py::test_total_seconds[1h30m15s-5415]
+returns_float          Wrong_Type             G1           1 CAUGHT     
+    caught by: tests/test_parse_duration.py::test_result_is_int
+swallows_malformed     No_Raise               G3           1 CAUGHT     
+    caught by: tests/test_parse_duration.py::test_malformed_raises_value_error[abc]
+    caught by: tests/test_parse_duration.py::test_malformed_raises_value_error[1x]
+    caught by: tests/test_parse_duration.py::test_malformed_raises_value_error[1h2x]
+raises_wrong_type      Wrong_Exception        G3           1 CAUGHT     
+    caught by: tests/test_parse_duration.py::test_malformed_raises_value_error[abc]
+    caught by: tests/test_parse_duration.py::test_malformed_raises_value_error[1x]
+    caught by: tests/test_parse_duration.py::test_malformed_raises_value_error[1h2x]
+
+Corpus: (caught=4, survived=6, untrusted=0)

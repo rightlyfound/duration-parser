@@ -1,0 +1,9 @@
+exhaustive: alphabet='0123456789hmsHM .\t' (18 chars), lengths 0-4
+  strings=111151 accepted_by_impl=3630 disagreements=0 first=[]
+sampled: 300000 seeded token strings (seed=0), up to ~12 chars
+  strings=300000 accepted_by_impl=37933 disagreements=0 first=[]
+unicode digit probes (outside the goal; NOT counted above):
+  '٣'+'h': impl=('ValueError', None) reference=('ok', 10800)
+  '３'+'h': impl=('ValueError', None) reference=('ok', 10800)
+  '²'+'h': impl=('ValueError', None) reference=('ValueError', None)
+  '①'+'h': impl=('ValueError', None) reference=('ValueError', None)

@@ -1,0 +1,9 @@
+[project]
+name = "duration-parser"
+version = "0.1.0"
+description = "parse_duration: test artifact for a corpus-gated verification protocol"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
